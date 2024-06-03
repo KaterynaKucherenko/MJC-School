@@ -80,7 +80,7 @@ public class CommentController implements BaseController<CommentDtoRequest, Comm
     }
 
     @Override
-    @PutMapping(value = "/{id:\\d+}")
+    @PatchMapping(value = "/{id:\\d+}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a comment", response = CommentDtoResponse.class)
     @ApiResponses(value = {

@@ -83,7 +83,7 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
     }
 
     @Override
-    @PutMapping(value = "/{id:\\d+}")
+    @PatchMapping(value = "/{id:\\d+}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a news", response = NewsDtoResponse.class)
     @ApiResponses(value = {
@@ -117,7 +117,7 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get news with provided parameters", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully fetched news with provided parameters"),
+            @ApiResponse(code = 200, message = "Successfully fetched news with provided parameters"),
             @ApiResponse(code = 400, message = "Invalid request from the client"),
             @ApiResponse(code = 404, message = "Resource is not found"),
             @ApiResponse(code = 500, message = "Internal server error")
@@ -137,7 +137,7 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get tags of provided news", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully fetched tags of provided news"),
+            @ApiResponse(code = 200, message = "Successfully fetched tags of provided news"),
             @ApiResponse(code = 400, message = "Invalid request from the client"),
             @ApiResponse(code = 404, message = "Resource is not found"),
             @ApiResponse(code = 500, message = "Internal server error")
@@ -154,7 +154,7 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get author of provided news", response = AuthorDtoResponse.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully fetched author of provided news"),
+            @ApiResponse(code = 200, message = "Successfully fetched author of provided news"),
             @ApiResponse(code = 400, message = "Invalid request from the client"),
             @ApiResponse(code = 404, message = "Resource is not found"),
             @ApiResponse(code = 500, message = "Internal server error")
@@ -169,7 +169,7 @@ public class NewsController implements BaseController<NewsDtoRequest, NewsDtoRes
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get comments of provided news", response = List.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully fetched comments of provided news"),
+            @ApiResponse(code = 200, message = "Successfully fetched comments of provided news"),
             @ApiResponse(code = 400, message = "Invalid request from the client"),
             @ApiResponse(code = 404, message = "Resource is not found"),
             @ApiResponse(code = 500, message = "Internal server error")

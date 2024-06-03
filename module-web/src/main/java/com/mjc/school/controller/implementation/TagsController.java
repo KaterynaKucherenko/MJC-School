@@ -79,7 +79,7 @@ public class TagsController implements BaseController<TagDtoRequest, TagDtoRespo
     }
 
     @Override
-    @PutMapping(value = "/{id:\\d+}")
+    @PatchMapping(value = "/{id:\\d+}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a tag", response = TagDtoResponse.class)
     @ApiResponses(value = {

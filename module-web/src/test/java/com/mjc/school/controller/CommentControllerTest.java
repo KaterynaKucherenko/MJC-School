@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 public class CommentControllerTest {
-    String newsExample = "{ \"authorName\": \"Barbara\", \"content\": \"The Populist Wave and Its Discontents\", \"tagNames\": [ \"military\", \"sensory\", \"guard\" ], \"title\": \"The Integrity\" }";
+    String NEWS_EXAMPLE = "{ \"authorName\": \"Barbara\", \"content\": \"The Populist Wave and Its Discontents\", \"tagNames\": [ \"military\", \"sensory\", \"guard\" ], \"title\": \"The Integrity\" }";
 
     @BeforeEach
     public void setup() {
@@ -34,9 +34,24 @@ public class CommentControllerTest {
 
     @Test
     public void readCommentByIdTest() {
-        Response newsResp = createNewsExample();
+        Response newsResp = RestAssured.given()
+                .contentType("application/json")
+                .body(NEWS_EXAMPLE)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
+
         Integer newsId = newsResp.jsonPath().getInt("id");
-        Response commResp = createCommentExample(newsId);
+
+        Response commResp = RestAssured.given()
+                .contentType("application/json")
+                .body("{ \"content\": \"Incredible!\", \"newsId\":" + newsId + "}")
+                .when()
+                .request("POST", "/comment")
+                .then()
+                .statusCode(201)
+                .extract().response();
 
         given()
                 .contentType("application/json")
@@ -46,12 +61,33 @@ public class CommentControllerTest {
                 .then()
                 .statusCode(200);
 
-        deleteTmpInfo(newsResp);
+        given()
+                .request("DELETE", "/news/" + newsResp.jsonPath().getInt("id"))
+                .then()
+                .statusCode(204);
+        List<Integer> tagIds = newsResp.jsonPath().getList("tagList.id", Integer.class);
+
+        tagIds.forEach(a -> given().contentType("application/json")
+                .delete("/tag/" + a)
+                .then()
+                .statusCode(204));
+
+        given()
+                .contentType("application/json")
+                .delete("/author/" + newsResp.jsonPath().getInt("authorDtoResponse.id"))
+                .then()
+                .statusCode(204);
     }
 
     @Test
     public void createCommentTest() {
-        Response newsResp = createNewsExample();
+        Response newsResp = RestAssured.given()
+                .contentType("application/json")
+                .body(NEWS_EXAMPLE)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
         Integer newsId = newsResp.jsonPath().getInt("id");
 
         given()
@@ -83,56 +119,37 @@ public class CommentControllerTest {
                 .then()
                 .statusCode(200)
                 .body("content", equalTo(comment));
-        deleteTmpInfo(newsResp);
+        given()
+                .request("DELETE", "/news/" + newsResp.jsonPath().getInt("id"))
+                .then()
+                .statusCode(204);
+        List<Integer> tagIds = newsResp.jsonPath().getList("tagList.id", Integer.class);
+
+        tagIds.forEach(a -> given().contentType("application/json")
+                .delete("/tag/" + a)
+                .then()
+                .statusCode(204));
+
+        given()
+                .contentType("application/json")
+                .delete("/author/" + newsResp.jsonPath().getInt("authorDtoResponse.id"))
+                .then()
+                .statusCode(204);
 
 
     }
 
     @Test
     public void updateCommentTest() {
-        Response newsResp = createNewsExample();
-        Integer newsId = newsResp.jsonPath().getInt("id");
-        Response response = createCommentExample(newsId);
-
-        given()
+        Response newsResp = RestAssured.given()
                 .contentType("application/json")
-                .param("id", response.jsonPath().getInt("id"))
-                .body("{ \"content\": \"NotBad!\", \"newsId\":" + newsId + "}")
-                .when()
-                .request("PUT", "/comment/" + response.jsonPath().getLong("id"))
-                .then()
-                .statusCode(200)
-                .body("newsId", equalTo(newsId));
-        deleteTmpInfo(newsResp);
-    }
-
-    @Test
-    public void deleteCommentTest() {
-        Response newsResp = createNewsExample();
-        Integer newsId = newsResp.jsonPath().getInt("id");
-        Response response = createCommentExample(newsId);
-
-        given()
-                .contentType("application/json")
-                .when()
-                .request("DELETE", "/comment/" + response.jsonPath().getLong("id"))
-                .then()
-                .statusCode(204);
-        deleteTmpInfo(newsResp);
-    }
-
-    public Response createNewsExample() {
-        return RestAssured.given()
-                .contentType("application/json")
-                .body(newsExample)
+                .body(NEWS_EXAMPLE)
                 .when()
                 .request("POST", "/news")
                 .then()
                 .statusCode(201).extract().response();
-    }
-
-    public Response createCommentExample(Integer newsId) {
-        return RestAssured.given()
+        Integer newsId = newsResp.jsonPath().getInt("id");
+        Response response = RestAssured.given()
                 .contentType("application/json")
                 .body("{ \"content\": \"Incredible!\", \"newsId\":" + newsId + "}")
                 .when()
@@ -140,9 +157,17 @@ public class CommentControllerTest {
                 .then()
                 .statusCode(201)
                 .extract().response();
-    }
 
-    public void deleteTmpInfo(Response response) {
+        given()
+                .contentType("application/json")
+                .param("id", response.jsonPath().getInt("id"))
+                .body("{ \"content\": \"NotBad!\", \"newsId\":" + newsId + "}")
+                .when()
+                .request("PATCH", "/comment/" + response.jsonPath().getLong("id"))
+                .then()
+                .statusCode(200)
+                .body("newsId", equalTo(newsId));
+
         given()
                 .request("DELETE", "/news/" + response.jsonPath().getInt("id"))
                 .then()
@@ -154,10 +179,46 @@ public class CommentControllerTest {
                 .then()
                 .statusCode(204));
 
+    }
+
+    @Test
+    public void deleteCommentTest() {
+        Response newsResp = RestAssured.given()
+                .contentType("application/json")
+                .body(NEWS_EXAMPLE)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
+        Integer newsId = newsResp.jsonPath().getInt("id");
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .body("{ \"content\": \"Incredible!\", \"newsId\":" + newsId + "}")
+                .when()
+                .request("POST", "/comment")
+                .then()
+                .statusCode(201)
+                .extract().response();
+
         given()
                 .contentType("application/json")
-                .delete("/author/" + response.jsonPath().getInt("authorDtoResponse.id"))
+                .when()
+                .request("DELETE", "/comment/" + response.jsonPath().getLong("id"))
                 .then()
                 .statusCode(204);
+
+        given()
+                .request("DELETE", "/news/" + response.jsonPath().getInt("id"))
+                .then()
+                .statusCode(204);
+
+        List<Integer> tagIds = response.jsonPath().getList("tagList.id", Integer.class);
+
+        tagIds.forEach(a -> given().contentType("application/json")
+                .delete("/tag/" + a)
+                .then()
+                .statusCode(204));
+
     }
+
 }

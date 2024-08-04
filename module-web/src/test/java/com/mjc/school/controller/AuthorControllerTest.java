@@ -6,13 +6,18 @@ import org.junit.jupiter.api.Test;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+
 
 public class AuthorControllerTest {
+    private static final String BASE_URI = "http://localhost:8082/api/v1";
+    private static final int PORT = 8082;
+    private  final String APPLICATION_JSON = "application/json";
+
     @BeforeEach
     public void setup() {
-        RestAssured.baseURI = "http://localhost:8082/api/v1";
-        RestAssured.port = 8082;
+        RestAssured.baseURI = BASE_URI;
+        RestAssured.port = PORT;
     }
 
     @Test
@@ -30,24 +35,55 @@ public class AuthorControllerTest {
 
     @Test
     public void readAuthorByIdTest() {
-        Response authResponse = createAuthorExample();
+        Response authResponse = RestAssured.given()
+                .contentType("application/json")
+                .body("{ \"name\": \"Roberto\" }")
+                .when()
+                .request("POST", "/author")
+                .then()
+                .statusCode(201)
+                .extract().response();
 
         String authorName = authResponse.jsonPath().getString("name");
+        Integer authId = authResponse.jsonPath().getInt("id");
+
 
         given()
                 .contentType("application/json")
                 .body(authResponse.jsonPath().getLong("id"))
                 .when()
-                .request("GET", "/author/" + authResponse.jsonPath().getLong("id"))
+                .request("GET", "/author/" + authId)
                 .then()
                 .statusCode(200)
                 .body("name", equalTo(authorName));
 
-        deleteAuthor(authResponse);
+        given()
+                .request("DELETE", "/author/" + authId)
+                .then()
+                .statusCode(204);
+
     }
 
     @Test
     public void createAuthorTest() {
+        Response response = given()
+                .contentType("application/json")
+                .body("{ \"name\": \"Roberto\" }")
+                .when()
+                .request("POST", "/author")
+                .then()
+                .statusCode(201)
+                .body("name", equalTo("Roberto"))
+                .extract().response();
+
+        given()
+                .request("DELETE", "/author/" + response.jsonPath().getLong("id"))
+                .then()
+                .statusCode(204);
+    }
+
+    @Test
+    public void updateAuthorTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
                 .body("{ \"name\": \"Roberto\" }")
@@ -58,33 +94,39 @@ public class AuthorControllerTest {
                 .body("name", equalTo("Roberto"))
                 .extract().response();
 
-        deleteAuthor(response);
-    }
-
-    @Test
-    public void updateAuthorTest() {
-        Response response = createAuthorExample();
         Integer authorId = response.jsonPath().getInt("id");
 
         given()
-                .contentType("application/json")
+                .contentType(APPLICATION_JSON)
                 .body("{ \"name\": \"T.Tvardo\" }")
                 .when()
-                .request("PUT", "/author/" + authorId)
+                .request("PATCH", "/author/" + authorId)
                 .then()
                 .statusCode(200)
                 .body("name", equalTo("T.Tvardo"))
                 .body("id", equalTo(authorId));
-        deleteAuthor(response);
+
+        given()
+                .request("DELETE", "/author/" + response.jsonPath().getLong("id"))
+                .then()
+                .statusCode(204);
     }
 
     @Test
     public void deleteAuthorTest() {
-        Response response = createAuthorExample();
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .body("{ \"name\": \"Roberto\" }")
+                .when()
+                .request("POST", "/author/")
+                .then()
+                .statusCode(201)
+                .body("name", equalTo("Roberto"))
+                .extract().response();
         Long authorId = response.jsonPath().getLong("id");
 
         given()
-                .contentType("application/json")
+                .contentType(APPLICATION_JSON)
                 .body(authorId)
                 .when()
                 .request("DELETE", "/author/" + authorId)
@@ -95,7 +137,7 @@ public class AuthorControllerTest {
     @Test
     public void createdAuthorFailedTest() {
         given()
-                .contentType("application/json")
+                .contentType(APPLICATION_JSON)
                 .body("{ \"name\": \"Ro\" }")
                 .when()
                 .request("POST", "/author")
@@ -103,21 +145,5 @@ public class AuthorControllerTest {
                 .statusCode(400);
     }
 
-    public Response createAuthorExample() {
-        return RestAssured.given()
-                .contentType("application/json")
-                .body("{ \"name\": \"R.Stasharko\" }")
-                .when()
-                .request("POST", "/author")
-                .then()
-                .statusCode(201)
-                .extract().response();
-    }
-    public void deleteAuthor(Response response){
-        given()
-                .request("DELETE", "/author/" + response.jsonPath().getLong("id"))
-                .then()
-                .statusCode(204);
-    }
 }
 

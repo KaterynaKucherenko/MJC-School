@@ -62,7 +62,7 @@ public class TagsControllerTest {
                 .contentType("application/json")
                 .body("{ \"name\": \"application\" }")
                 .when()
-                .request("PUT", "/tag/" + response.jsonPath().getInt("id"))
+                .request("PATCH", "/tag/" + response.jsonPath().getInt("id"))
                 .then()
                 .statusCode(200).extract().response();
         given()

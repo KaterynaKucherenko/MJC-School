@@ -39,7 +39,13 @@ public class NewsControllerTest {
 
     @Test
     public void readNewsByIdTest() {
-        Response response = createNewsExample();
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .body(newsExample)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
         given()
                 .contentType("application/json")
                 .body(response.jsonPath().getLong("id"))
@@ -67,12 +73,18 @@ public class NewsControllerTest {
 
     @Test
     public void updateNewsTest() {
-        Response response = createNewsExample();
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .body(newsExample)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
         Response updResp = RestAssured.given()
                 .contentType("application/json")
                 .body("{ \"authorName\": \"Vinsent\", \"content\": \"The Populist Wave and Its Discontents\", \"title\": \"The documentalist\"}")
                 .when()
-                .request("PUT", "/news/" + response.jsonPath().getLong("id"))
+                .request("PATCH", "/news/" + response.jsonPath().getLong("id"))
                 .then()
                 .statusCode(200)
                 .body("title", equalTo("The documentalist")).extract().response();
@@ -82,7 +94,13 @@ public class NewsControllerTest {
 
     @Test
     public void deleteNewsTest() {
-        Response response = createNewsExample();
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .body(newsExample)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
         given()
                 .contentType("application/json")
                 .when()
@@ -104,7 +122,13 @@ public class NewsControllerTest {
 
     @Test
     public void getAuthorByNewsIdTest() {
-        Response response = createNewsExample();
+        Response response = RestAssured.given()
+                .contentType("application/json")
+                .body(newsExample)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
 
         Integer newsId = response.jsonPath().getInt("id");
         given()
@@ -120,7 +144,13 @@ public class NewsControllerTest {
 
     @Test
     public void getCommentByNewsIdTest() {
-        Response newsResp = createNewsExample();
+        Response newsResp = RestAssured.given()
+                .contentType("application/json")
+                .body(newsExample)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
         Long newsId = newsResp.jsonPath().getLong("id");
 
         RestAssured.given()
@@ -156,7 +186,13 @@ public class NewsControllerTest {
 
     @Test
     public void getTagByNewsIdTest() {
-        Response newsResp = createNewsExample();
+        Response newsResp = RestAssured.given()
+                .contentType("application/json")
+                .body(newsExample)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
         Long newsId = newsResp.jsonPath().getLong("id");
         List<String> tagNamesList = newsResp.jsonPath().getList("tagList.name", String.class);
 
@@ -174,7 +210,13 @@ public class NewsControllerTest {
 
     @Test
     public void readListOfNewsByParamsTest() {
-        Response newsResp = createNewsExample();
+        Response newsResp = RestAssured.given()
+                .contentType("application/json")
+                .body(newsExample)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(201).extract().response();
 
         String titleForNews = newsResp.jsonPath().getString("title");
         String authorNameForNews = newsResp.jsonPath().getString("authorName");

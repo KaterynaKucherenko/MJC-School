@@ -1,10 +1,12 @@
 plugins {
     id 'java-base'
+    id "org.sonarqube" version "3.5.0.2730"
 }
 
 wrapper {
     gradleVersion = gradlewVersion
 }
+
 
 subprojects {
     apply plugin: 'java'
@@ -16,6 +18,11 @@ subprojects {
 
     repositories {
         mavenCentral()
+    }
+    sonar {
+        properties {
+            property "sonar.projectKey", "my-news-project"
+        }
     }
 
     dependencies {

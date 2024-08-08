@@ -4,7 +4,7 @@
 
 #### Recommended Timeline
 
-The recommended timeline for the whole module is 2 weeks.
+The recommended timeline for the whole module is 2    weeks.
 
 #### Business requirements
 

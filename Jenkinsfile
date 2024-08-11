@@ -4,7 +4,7 @@ node {
   }
   stage('SonarQube Analysis') {
     withSonarQubeEnv() {
-      sh "./gradlew sonar"
+      bat "./gradlew sonar"
     }
   }
 }
@@ -32,7 +32,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Выполнение сборки проекта с использованием Gradle
-                sh 'gradle clean build'
+                bat 'gradle clean build'
             }
         }
 
@@ -40,7 +40,7 @@ pipeline {
             steps {
                 // Запуск SonarQube анализа
                 withSonarQubeEnv('SonarQube Server') {
-                    sh 'gradle sonarqube'
+                    bat 'gradle sonarqube'
                 }
             }
         }
@@ -55,7 +55,7 @@ pipeline {
         stage('Test') {
             steps {
                 // Запуск тестов и генерация отчетов по покрытию кода
-                sh 'gradle test jacocoTestReport'
+                bat 'gradle test jacocoTestReport'
             }
         }
     }

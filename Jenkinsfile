@@ -13,7 +13,7 @@ pipeline {
 
     tools {
         // Укажите используемую версию Gradle
-        gradle 'Gradle'
+        gradle 'Gradle_7.4.2'
     }
 
     environment {

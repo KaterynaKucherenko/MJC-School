@@ -45,20 +45,19 @@ public class AuthorControllerTest {
                 .extract().response();
 
         String authorName = authResponse.jsonPath().getString("name");
-        Integer authId = authResponse.jsonPath().getInt("id");
 
 
         given()
                 .contentType("application/json")
                 .body(authResponse.jsonPath().getLong("id"))
                 .when()
-                .request("GET", "/author/" + authId)
+                .request("GET", "/author/" + authResponse.jsonPath().getLong("id"))
                 .then()
                 .statusCode(200)
                 .body("name", equalTo(authorName));
 
         given()
-                .request("DELETE", "/author/" + authId)
+                .request("DELETE", "/author/" + authResponse.jsonPath().getLong("id"))
                 .then()
                 .statusCode(204);
 

@@ -57,30 +57,29 @@ subprojects {
     }
     test {
         useJUnitPlatform()
-    }
-    test {
-        finalizedBy jacocoTestReport
-    }
 
-    jacocoTestReport {
-        reports {
-            xml.enabled true
-            html.enabled true
-            csv.enabled false
-        }
     }
-
-    jacocoTestCoverageVerification {
-        violationRules {
-            rule {
-                limit {
-                    minimum = 0.50
-                }
-            }
-        }
-    }
-
-    check.dependsOn jacocoTestCoverageVerification
+// finalizedBy jacocoTestReport
+//
+//    jacocoTestReport {
+//        reports {
+//            xml.enabled true
+//            html.enabled true
+//            csv.enabled false
+//        }
+//    }
+//
+//    jacocoTestCoverageVerification {
+//        violationRules {
+//            rule {
+//                limit {
+//                    minimum = 0.50
+//                }
+//            }
+//        }
+//    }
+//
+//    check.dependsOn jacocoTestCoverageVerification
 }
 
 

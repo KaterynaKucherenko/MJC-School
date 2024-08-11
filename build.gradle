@@ -19,9 +19,11 @@ subprojects {
     repositories {
         mavenCentral()
     }
-    sonar {
+    sonarqube {
         properties {
             property "sonar.projectKey", "my-news-project"
+            property "sonar.host.url", "http://localhost:9000"
+            property "sonar.login", "squ_98a3eede882280b078b2e918b98bde012fd452f6"
         }
     }
 

@@ -23,7 +23,7 @@ subprojects {
         properties {
             property "sonar.projectKey", "my-news-project"
             property "sonar.host.url", "http://localhost:9000"
-            property "sonar.login", "sqp_fa9981e77695c32164ad83d01e447359490ac5f1"
+            property "sonar.login", "sqp_1532f577f859078a18448c8173a0c3c303c3fdd5"
         }
     }
 
@@ -59,29 +59,29 @@ subprojects {
     }
     test {
         useJUnitPlatform()
-
+        finalizedBy jacocoTestReport
     }
-// finalizedBy jacocoTestReport
-//
-//    jacocoTestReport {
-//        reports {
-//            xml.enabled true
-//            html.enabled true
-//            csv.enabled false
-//        }
-//    }
-//
-//    jacocoTestCoverageVerification {
-//        violationRules {
-//            rule {
-//                limit {
-//                    minimum = 0.50
-//                }
-//            }
-//        }
-//    }
-//
-//    check.dependsOn jacocoTestCoverageVerification
+
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            html.enabled true
+            csv.enabled false
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                limit {
+                    minimum = 0.50
+                }
+            }
+        }
+    }
+
+    check.dependsOn jacocoTestCoverageVerification
 }
 
 

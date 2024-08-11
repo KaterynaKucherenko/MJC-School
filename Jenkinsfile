@@ -125,4 +125,3 @@ pipeline {
 //                  body: "Something went wrong with ${env.JOB_NAME}."
 //         }
 //     }
-}

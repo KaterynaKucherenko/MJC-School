@@ -19,7 +19,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'gradle clean build'
+                bat 'C:\\Windows\\System32\\cmd.exe /c gradle clean build'
             }
         }
 

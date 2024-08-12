@@ -25,9 +25,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('Sonar Qube') {
-                    bat "${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner"
-                }
+                bat 'gradle sonarqube'
             }
         }
 
@@ -45,10 +43,6 @@ pipeline {
         success {
             echo 'Pipeline succeeded.'
         }
-        failure {
-            mail to: 'estorskaya@gmail.com',
-                 subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-                 body: "Something went wrong with ${env.JOB_NAME}."
-        }
+
     }
 }

@@ -46,7 +46,7 @@ pipeline {
             echo 'Pipeline succeeded.'
         }
         failure {
-            mail to: 'your-email@example.com',
+            mail to: 'estorskaya@gmail.com',
                  subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
                  body: "Something went wrong with ${env.JOB_NAME}."
         }

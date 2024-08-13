@@ -7,8 +7,9 @@ pipeline {
     }
 
     environment {
+    PATH = "${env.PATH};C:\\Windows\\System32"
         SONARQUBE_SCANNER_HOME = tool name: 'SonarQube Scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-       PATH = "${env.PATH};C:\\Windows\\System32"
+
     }
 
     stages {

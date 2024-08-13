@@ -240,6 +240,8 @@ public class NewsControllerTest {
                 .statusCode(200)
                 .body("id", equalTo(idForCompare));
 
+
+        
         given()
                 .contentType("application/json")
                 .body("{\"authorName\":" + authorNameForNews + "}")

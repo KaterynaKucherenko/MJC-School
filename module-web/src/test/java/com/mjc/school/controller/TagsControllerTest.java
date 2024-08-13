@@ -73,6 +73,7 @@ public class TagsControllerTest {
                 .body("name", equalTo(responseUpdatedTag.jsonPath().getString("name")));
         deleteTagExample(response);
     }
+
     @Test
     public void deleteTagTest() {
         Response response = RestAssured.given()
@@ -86,8 +87,9 @@ public class TagsControllerTest {
         deleteTagExample(response);
 
     }
+
     public Response createCommentExample() {
-       return RestAssured.given()
+        return RestAssured.given()
                 .contentType("application/json")
                 .body("{ \"name\": \"business\" }")
                 .when()
@@ -98,7 +100,8 @@ public class TagsControllerTest {
                 .extract().response();
 
     }
-    public void deleteTagExample(Response response){
+
+    public void deleteTagExample(Response response) {
         given()
                 .contentType("application/json")
                 .request("DELETE", "/tag/" + response.jsonPath().getInt("id"));

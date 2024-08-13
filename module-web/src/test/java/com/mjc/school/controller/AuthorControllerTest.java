@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class AuthorControllerTest {
     private static final String BASE_URI = "http://localhost:8082/api/v1";
     private static final int PORT = 8082;
-    private  final String APPLICATION_JSON = "application/json";
+    private final String APPLICATION_JSON = "application/json";
 
     @BeforeEach
     public void setup() {

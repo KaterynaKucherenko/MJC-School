@@ -4,10 +4,15 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+
+@SpringBootTest
 public class TagsControllerTest {
     @BeforeEach
     public void setup() {
@@ -29,8 +34,10 @@ public class TagsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void readTagByIdTest() {
-        Response response = createCommentExample();
+        Response response = createTagExample();
         given()
                 .contentType("application/json")
                 .request("GET", "/tag/" + response.jsonPath().getInt("id"))
@@ -42,6 +49,8 @@ public class TagsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void createTagTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -56,8 +65,10 @@ public class TagsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void updateTagTest() {
-        Response response = createCommentExample();
+        Response response = createTagExample();
         Response responseUpdatedTag = RestAssured.given()
                 .contentType("application/json")
                 .body("{ \"name\": \"application\" }")
@@ -75,6 +86,8 @@ public class TagsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void deleteTagTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -88,7 +101,7 @@ public class TagsControllerTest {
 
     }
 
-    public Response createCommentExample() {
+    public Response createTagExample() {
         return RestAssured.given()
                 .contentType("application/json")
                 .body("{ \"name\": \"business\" }")

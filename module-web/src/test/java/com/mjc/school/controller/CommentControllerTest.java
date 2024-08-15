@@ -4,12 +4,18 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+
+
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+@SpringBootTest
 public class CommentControllerTest {
     String NEWS_EXAMPLE = "{ \"authorName\": \"Barbara\", \"content\": \"The Populist Wave and Its Discontents\", \"tagNames\": [ \"military\", \"sensory\", \"guard\" ], \"title\": \"The Integrity\" }";
 
@@ -33,6 +39,8 @@ public class CommentControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void readCommentByIdTest() {
         Response newsResp = RestAssured.given()
                 .contentType("application/json")
@@ -60,26 +68,12 @@ public class CommentControllerTest {
                 .request("GET", "/comment/" + commResp.jsonPath().getLong("id"))
                 .then()
                 .statusCode(200);
-
-        given()
-                .request("DELETE", "/news/" + newsResp.jsonPath().getInt("id"))
-                .then()
-                .statusCode(204);
-        List<Integer> tagIds = newsResp.jsonPath().getList("tagList.id", Integer.class);
-
-        tagIds.forEach(a -> given().contentType("application/json")
-                .delete("/tag/" + a)
-                .then()
-                .statusCode(204));
-
-        given()
-                .contentType("application/json")
-                .delete("/author/" + newsResp.jsonPath().getInt("authorDtoResponse.id"))
-                .then()
-                .statusCode(204);
+        deleteNewsCommentTest(newsResp);
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void createCommentTest() {
         Response newsResp = RestAssured.given()
                 .contentType("application/json")
@@ -119,27 +113,12 @@ public class CommentControllerTest {
                 .then()
                 .statusCode(200)
                 .body("content", equalTo(comment));
-        given()
-                .request("DELETE", "/news/" + newsResp.jsonPath().getInt("id"))
-                .then()
-                .statusCode(204);
-        List<Integer> tagIds = newsResp.jsonPath().getList("tagList.id", Integer.class);
-
-        tagIds.forEach(a -> given().contentType("application/json")
-                .delete("/tag/" + a)
-                .then()
-                .statusCode(204));
-
-        given()
-                .contentType("application/json")
-                .delete("/author/" + newsResp.jsonPath().getInt("authorDtoResponse.id"))
-                .then()
-                .statusCode(204);
-
-
+        deleteNewsCommentTest(newsResp);
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void updateCommentTest() {
         Response newsResp = RestAssured.given()
                 .contentType("application/json")
@@ -168,20 +147,14 @@ public class CommentControllerTest {
                 .statusCode(200)
                 .body("newsId", equalTo(newsId));
 
-        given()
-                .request("DELETE", "/news/" + response.jsonPath().getInt("id"))
-                .then()
-                .statusCode(204);
-        List<Integer> tagIds = response.jsonPath().getList("tagList.id", Integer.class);
+       deleteNewsCommentTest(newsResp);
 
-        tagIds.forEach(a -> given().contentType("application/json")
-                .delete("/tag/" + a)
-                .then()
-                .statusCode(204));
 
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void deleteCommentTest() {
         Response newsResp = RestAssured.given()
                 .contentType("application/json")
@@ -206,19 +179,53 @@ public class CommentControllerTest {
                 .request("DELETE", "/comment/" + response.jsonPath().getLong("id"))
                 .then()
                 .statusCode(204);
-
-        given()
-                .request("DELETE", "/news/" + response.jsonPath().getInt("id"))
-                .then()
-                .statusCode(204);
-
-        List<Integer> tagIds = response.jsonPath().getList("tagList.id", Integer.class);
-
-        tagIds.forEach(a -> given().contentType("application/json")
-                .delete("/tag/" + a)
-                .then()
-                .statusCode(204));
+        deleteNewsCommentTest(newsResp);
+//        given()
+//                .contentType("application/json")
+//                .when()
+//                .request("DELETE", "/news/" + response.jsonPath().getLong("id"))
+//                .then()
+//                .statusCode(204);
+//
+//        List<Integer> tagIds = response.jsonPath().getList("tagList.id", Integer.class);
+//
+//        tagIds.forEach(a -> given().contentType("application/json")
+//                .delete("/tag/" + a)
+//                .then()
+//                .statusCode(204));
 
     }
 
+    public void deleteNewsCommentTest(Response response) {
+        given()
+                .request("DELETE", "/news/" + response.jsonPath().getLong("id"))
+                .then().statusCode(204);
+        List<Integer> tagIds = response.jsonPath().getList("tagList.id", Integer.class);
+        tagIds.forEach(a -> given().contentType("application/json").
+                delete("/tag/" + a).
+                then().statusCode(204));
+        given().contentType("application/json").
+                delete("/author/" + response.jsonPath().
+                        getLong("authorDtoResponse.id")).
+                then().statusCode(204);
+    }
+
+//        tagIds.forEach(a -> given().contentType("application/json")
+//                .delete("/tag/" + a)
+//                .then()
+//                .statusCode(204));
+//        given()
+//                .contentType("application/json")
+//                .request("DELETE", "/news/" + newsResp.jsonPath().getInt("id"))
+//                .then()
+//                .statusCode(204);
+//
+//        given()
+//                .contentType("application/json")
+//                .delete("/author/" + newsResp.jsonPath().getInt("authorDtoResponse.id"))
+//                .then()
+//                .statusCode(204);
+
 }
+
+

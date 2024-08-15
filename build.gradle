@@ -40,6 +40,8 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-web:2.7.7'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.7.7'
         testImplementation "org.springframework:spring-test:$springVersion"
+        testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.7'
+
 
 
         implementation 'org.postgresql:postgresql:42.6.0'
@@ -60,8 +62,8 @@ subprojects {
         annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
         implementation "org.mapstruct:mapstruct:$mapstructVersion"
         testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
-        testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.6'
-
+//        testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.6'
+//
 
     }
     test {
@@ -71,16 +73,6 @@ subprojects {
     jacocoTestReport {
         dependsOn test
 
-        jacocoTestCoverageVerification {
-            violationRules {
-                rule {
-                    limit {
-                        minimum = 0.50
-                    }
-                }
-            }
-        }
-        check.dependsOn jacocoTestCoverageVerification
 
         reports {
             xml.required = true

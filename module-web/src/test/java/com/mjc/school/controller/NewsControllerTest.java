@@ -4,7 +4,10 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,8 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.fail;
 
+
+@SpringBootTest
 public class NewsControllerTest {
     String newsExample = "{ \"authorName\": \"Barbara\", \"content\": \"The Populist Wave and Its Discontents\", \"tagNames\": [ \"military\", \"sensory\", \"guard\" ], \"title\": \"The Integrity\" }";
 
@@ -38,6 +43,8 @@ public class NewsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void readNewsByIdTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -58,6 +65,8 @@ public class NewsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void createNewsTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -72,6 +81,8 @@ public class NewsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void updateNewsTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -93,6 +104,8 @@ public class NewsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void deleteNewsTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -110,6 +123,8 @@ public class NewsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void createdNewsFailedTest() {
         given()
                 .contentType("application/json")
@@ -121,6 +136,8 @@ public class NewsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void getAuthorByNewsIdTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -143,6 +160,8 @@ public class NewsControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void getCommentByNewsIdTest() {
         Response newsResp = RestAssured.given()
                 .contentType("application/json")
@@ -185,6 +204,8 @@ public class NewsControllerTest {
 
 
     @Test
+    @Transactional
+    @Rollback
     public void getTagByNewsIdTest() {
         Response newsResp = RestAssured.given()
                 .contentType("application/json")
@@ -291,9 +312,15 @@ public class NewsControllerTest {
 
     public void deleteTmpInfo(Response response) {
         given()
-                .request("DELETE", "/news/" + response.jsonPath().getLong("id")).then().statusCode(204);
+                .request("DELETE", "/news/" + response.jsonPath().getLong("id"))
+                .then().statusCode(204);
         List<Integer> tagIds = response.jsonPath().getList("tagList.id", Integer.class);
-        tagIds.forEach(a -> given().contentType("application/json").delete("/tag/" + a).then().statusCode(204));
-        given().contentType("application/json").delete("/author/" + response.jsonPath().getLong("authorDtoResponse.id")).then().statusCode(204);
+        tagIds.forEach(a -> given().contentType("application/json").
+                delete("/tag/" + a).
+                then().statusCode(204));
+        given().contentType("application/json").
+                delete("/author/" + response.jsonPath().
+                        getLong("authorDtoResponse.id")).
+                then().statusCode(204);
     }
 }

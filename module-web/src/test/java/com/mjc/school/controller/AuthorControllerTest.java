@@ -4,11 +4,15 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import io.restassured.response.Response;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-
+@SpringBootTest
 public class AuthorControllerTest {
     private static final String BASE_URI = "http://localhost:8082/api/v1";
     private static final int PORT = 8082;
@@ -34,6 +38,8 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void readAuthorByIdTest() {
         Response authResponse = RestAssured.given()
                 .contentType("application/json")
@@ -56,14 +62,13 @@ public class AuthorControllerTest {
                 .statusCode(200)
                 .body("name", equalTo(authorName));
 
-        given()
-                .request("DELETE", "/author/" + authResponse.jsonPath().getLong("id"))
-                .then()
-                .statusCode(204);
+        deleteAuthorExample(authResponse);
 
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void createAuthorTest() {
         Response response = given()
                 .contentType("application/json")
@@ -75,13 +80,12 @@ public class AuthorControllerTest {
                 .body("name", equalTo("Roberto"))
                 .extract().response();
 
-        given()
-                .request("DELETE", "/author/" + response.jsonPath().getLong("id"))
-                .then()
-                .statusCode(204);
+        deleteAuthorExample(response);
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void updateAuthorTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -105,13 +109,12 @@ public class AuthorControllerTest {
                 .body("name", equalTo("T.Tvardo"))
                 .body("id", equalTo(authorId));
 
-        given()
-                .request("DELETE", "/author/" + response.jsonPath().getLong("id"))
-                .then()
-                .statusCode(204);
+        deleteAuthorExample(response);
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void deleteAuthorTest() {
         Response response = RestAssured.given()
                 .contentType("application/json")
@@ -134,6 +137,8 @@ public class AuthorControllerTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void createdAuthorFailedTest() {
         given()
                 .contentType(APPLICATION_JSON)
@@ -143,6 +148,11 @@ public class AuthorControllerTest {
                 .then()
                 .statusCode(400);
     }
+    public void deleteAuthorExample(Response authResponse) {
+        given()
+                .request("DELETE", "/author/" + authResponse.jsonPath().getLong("id"))
+                .then()
+                .statusCode(204);}
 
 }
 

@@ -10,6 +10,7 @@ wrapper {
 jacoco {
     toolVersion = "0.8.11"
 }
+
 sonar {
     properties {
         property "sonar.projectKey", "my-news-project"
@@ -69,6 +70,17 @@ subprojects {
     }
     jacocoTestReport {
         dependsOn test
+
+        jacocoTestCoverageVerification {
+            violationRules {
+                rule {
+                    limit {
+                        minimum = 0.50
+                    }
+                }
+            }
+        }
+        check.dependsOn jacocoTestCoverageVerification
 
         reports {
             xml.required = true

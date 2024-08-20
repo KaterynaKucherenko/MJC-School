@@ -1,7 +1,7 @@
 package com.mjc.school.controller.implementation;
 
 
-import com.mjc.school.controller.BaseController;
+import com.mjc.school.controller.interfaces.BaseController;
 import com.mjc.school.controller.annotation.CommandParam;
 import com.mjc.school.controller.hateoas.LinkHelper;
 import com.mjc.school.service.dto.*;

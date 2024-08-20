@@ -1,5 +1,6 @@
 package com.mjc.school.repository.model;
 
+import com.mjc.school.repository.interfaces.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;

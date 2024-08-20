@@ -62,8 +62,7 @@ subprojects {
         annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
         implementation "org.mapstruct:mapstruct:$mapstructVersion"
         testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
-//        testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.6'
-//
+
 
     }
     test {

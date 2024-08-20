@@ -35,7 +35,15 @@ public class AuthorRepository extends AbstractDBRepository<AuthorModel, Long> {
     }
 
     public Optional<AuthorModel> readAuthorByName(String name) {
-        TypedQuery<AuthorModel> typedQuery = entityManager.createQuery("SELECT a FROM AuthorModel a WHERE a.name LIKE:name", AuthorModel.class).setParameter("name", "%" + name + "%");
+        TypedQuery<AuthorModel> typedQuery = entityManager.createQuery("SELECT a FROM AuthorModel a WHERE a.name LIKE:name", AuthorModel.class).setParameter("name",  name );
+        try {
+            return Optional.of(typedQuery.getSingleResult());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    public Optional<AuthorModel> readAuthorByPartName(String name) {
+        TypedQuery<AuthorModel> typedQuery = entityManager.createQuery("SELECT a FROM AuthorModel a WHERE a.name LIKE:name", AuthorModel.class).setParameter("name", "%" + name + "%" );
         try {
             return Optional.of(typedQuery.getSingleResult());
         } catch (Exception e) {

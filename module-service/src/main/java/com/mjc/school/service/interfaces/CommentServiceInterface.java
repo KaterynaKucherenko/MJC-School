@@ -1,6 +1,5 @@
 package com.mjc.school.service.interfaces;
 
-import com.mjc.school.service.BaseService;
 import com.mjc.school.service.dto.CommentDtoRequest;
 import com.mjc.school.service.dto.CommentDtoResponse;
 

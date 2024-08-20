@@ -1,4 +1,4 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.swaggerConf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +9,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.service.Contact;
 import springfox.documentation.builders.ApiInfoBuilder;
-
-import java.util.Collections;
 
 @Configuration
 public class SwaggerConfig {

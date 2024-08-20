@@ -1,4 +1,4 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.interfaces;
 
 import org.springframework.hateoas.EntityModel;
 

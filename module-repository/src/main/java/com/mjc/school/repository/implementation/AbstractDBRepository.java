@@ -1,8 +1,8 @@
 package com.mjc.school.repository.implementation;
 
 
-import com.mjc.school.repository.BaseRepository;
-import com.mjc.school.repository.model.BaseEntity;
+import com.mjc.school.repository.interfaces.BaseRepository;
+import com.mjc.school.repository.interfaces.BaseEntity;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;

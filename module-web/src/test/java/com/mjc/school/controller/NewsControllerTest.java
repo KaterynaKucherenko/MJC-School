@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @SpringBootTest
 public class NewsControllerTest {
     String newsExample = "{ \"authorName\": \"Barbara\", \"content\": \"The Populist Wave and Its Discontents\", \"tagNames\": [ \"military\", \"sensory\", \"guard\" ], \"title\": \"The Integrity\" }";
+    String newsExampleWithoutAuthor = "{ \"authorName\": \"\", \"content\": \"The Populist Wave and Its Discontents\", \"tagNames\": [ \"military\", \"sensory\", \"guard\" ], \"title\": \"The Integrity\" }";
 
     @BeforeEach
     public void setup() {
@@ -298,6 +299,21 @@ public class NewsControllerTest {
         deleteTmpInfo(newsResp);
 
     }
+    @Test
+    @Transactional
+    @Rollback
+    public void createNewsTestWithoutAuthor() {
+        given()
+                .contentType("application/json")
+                .body(newsExampleWithoutAuthor)
+                .when()
+                .request("POST", "/news")
+                .then()
+                .statusCode(400).extract().response();
+
+    }
+
+
 
     public Response createNewsExample() {
         return RestAssured.given()

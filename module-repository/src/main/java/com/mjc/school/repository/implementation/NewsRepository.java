@@ -28,7 +28,7 @@ public class NewsRepository extends AbstractDBRepository<NewsModel, Long> {
         }
         if (authorName != null) {
             Join<NewsModel, AuthorModel> newsJoinAuthor = root.join("authorModel");
-            Predicate authorN = criteriaBuilder.equal(newsJoinAuthor.get("name"), authorName);
+            Predicate authorN = criteriaBuilder.equal(newsJoinAuthor.get("name"),  authorName );
             query.select(root).where(authorN);
         }
         if (title != null) {

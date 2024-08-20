@@ -1,4 +1,4 @@
-package com.mjc.school.controller;
+package com.mjc.school.controller.ExceptionHandler;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

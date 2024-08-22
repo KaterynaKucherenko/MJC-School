@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/KaterynaKucherenko/stage3-module4-task.git', branch: 'main'
+                git url: 'https://github.com/KaterynaKucherenko/MJC-School.git', branch: 'main'
             }
         }
 

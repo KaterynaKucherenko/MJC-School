@@ -13,9 +13,9 @@ jacoco {
 
 sonar {
     properties {
-        property "sonar.projectKey", "my-news-project"
+        property "sonar.projectKey", "My-news-project"
         property "sonar.projectName", "my-news-project"
-        property "sonar.login", "sqp_ee8987f711853140a422d30d37507a095232ac5d"
+        property "sonar.login", "squ_4d10bf81e74083f9d1c8d1d180a1f5ea1ec47c67"
     }
 }
 

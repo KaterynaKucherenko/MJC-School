@@ -71,7 +71,7 @@ public class NewsService implements NewsServiceInterface {
         }
         customValidator.validateNews(createRequest);
         createNotExistAuthor(createRequest.authorName());
-        if (createRequest.tagNames() == null || createRequest.tagNames().isEmpty() || createRequest.tagNames().equals("")) {
+        if (createRequest.tagNames() == null || createRequest.tagNames().isEmpty() ) {
             throw new ValidatorException("Please specify tag names");
         }
         createNotExistTags(createRequest.tagNames());

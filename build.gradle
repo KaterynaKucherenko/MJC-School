@@ -78,6 +78,18 @@ subprojects {
             csv.required = false
         }
     }
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'CLASS'
+                limit {
+                    counter = 'INSTRUCTION'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.20
+                }
+            }
+        }
+    }
 }
 
 
